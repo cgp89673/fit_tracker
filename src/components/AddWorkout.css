@@ -1,8 +1,6 @@
 .add-workout-container {
     background-color: #fff;
-    padding: 20px;
-    margin: 30px;
-    border-radius: 8px;
+
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   }
   
@@ -32,3 +30,11 @@
     cursor: pointer;
   }
   
+  h2 {
+    padding: 20px;
+  }
+
+  form {
+    margin: 30px;
+    border-radius: 8px;
+  }

@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import './AddWorkout.css'; 
+import Hdr from './Hdr';
 
 const AddWorkout = () => {
   const [duration, setDuration] = useState('');
@@ -15,7 +16,9 @@ const AddWorkout = () => {
   };
 
   return (
+    
     <div className="add-workout-container">
+      <Hdr></Hdr>
       <h2>Add a Walk</h2>
       <form onSubmit={handleSubmit} className="add-workout-form">
         <label htmlFor="duration">Duration (minutes):</label>

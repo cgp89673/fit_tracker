@@ -27,9 +27,9 @@ const Hdr = () => {
         <h1><i>Dawg</i>Walk</h1>
       </Link>
       <nav className="hdr-nav">
-        
         <Link to="/add-workout" className="hdr-link">Add a Workout</Link>
         <Link to="/workout-history" className="hdr-link">Workout History</Link>
+        <Link to="/" >Logout</Link>
       </nav>
     </header>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import './WorkoutHistory.css';
+import Hdr from './Hdr';
 
 const WorkoutHistory = () => {
   // Dummy data for the workouts
@@ -83,6 +84,8 @@ const WorkoutHistory = () => {
   };
 
   return (
+    <div>
+      <Hdr></Hdr>
     <div className="workout-history-container">
       <h1>Your Walk History</h1>
       <div className="workout-cards-container">
@@ -108,6 +111,7 @@ const WorkoutHistory = () => {
           {percentageGoalMet}% Goal Met
         </div>
       </div>
+    </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
-import Hdr from "./src/app/components/Hdr";
-import SignUpPage from "./src/app/components/SignUpPage";
-import Footer from "./src/app/components/Footer";
+import Hdr from "./components/Hdr";
+import SignUpPage from "./components/SignUpPage";
+import Footer from "./components/Footer";
 
 function SignUp() {
   return (

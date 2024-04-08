@@ -2,6 +2,7 @@ import React from 'react';
 import './HomeContent.css';
 import { Link } from 'react-router-dom';
 import Button from './Button';
+import UserList from './UsersList';
 
 const HomeContent = () => {
     return (

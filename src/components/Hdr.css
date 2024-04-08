@@ -1,0 +1,26 @@
+.hdr {
+    text-align: left;
+    background-color:  rgb(173,186,145);
+    padding: 30px 0 20px 0 ;
+    display: flex;
+    padding-right: 20px;
+}
+
+.hdr h1 {
+    margin: 0 auto;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin-left: 15px;
+}
+
+.hdr h2 {
+    margin: 0 auto;
+    color: white;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin-left: 15px;
+}
+.hdr a {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+  }

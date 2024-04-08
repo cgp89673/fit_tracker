@@ -1,0 +1,7 @@
+.my-runs-page {
+    display: flex;
+    flex-direction: row; /* Change flex direction to row */
+    align-items: center; /* Center vertically */
+    justify-content: flex-end; /* Align items to the right */
+    text-align: center; /* Center text */
+}

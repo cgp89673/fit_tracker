@@ -79,6 +79,6 @@ router.post('/tokenIsValid', async (req, res) => {
   }
 });
 
-// Other routes can be added below
+
 
 module.exports = router;

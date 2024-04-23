@@ -50,7 +50,7 @@ const SignUpPage = () => {
                     <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} /><br /><br />
 
                     <label htmlFor="password">Confirm password:</label><br />
-                    <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} style={{ borderColor: passwordMatch ? '' : 'red' }} /> <br /><br />
+                    <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} /> <br /><br />
 
                     <Button width = '150px' height = '75px' type="submit" value="Sign In">Sign up</Button>
                 </form><br /><br /><br />

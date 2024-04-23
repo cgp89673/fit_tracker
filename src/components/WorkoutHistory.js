@@ -2,7 +2,10 @@ import React from 'react';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import './WorkoutHistory.css';
+import Button from './Button';
 import Hdr from './Hdr';
+import DeleteButton from './DeleteButton';
+import { Link } from 'react-router-dom';
 
 const WorkoutHistory = () => {
   // Dummy data for the workouts
@@ -91,8 +94,12 @@ const WorkoutHistory = () => {
       <div className="workout-cards-container">
         {workouts.map((workout, index) => (
           <div key={index} className="workout-card">
-            <p>Date: {workout.date}</p>
-            <p>Duration: {workout.duration} minutes</p>
+            <div className = "content">
+              <p>Date: {workout.date}</p>
+              <p>Duration: {workout.duration} minutes</p>
+              <Button className = "btn"><Link to="/add-workout">Edit</Link></Button>
+              <DeleteButton className = "btn">Delete</DeleteButton>
+            </div>
           </div>
         ))}
       </div>

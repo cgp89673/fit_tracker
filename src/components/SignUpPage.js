@@ -6,14 +6,28 @@ import Button from './Button';
 const SignUpPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [passwordMatch, setPasswordMatch] = useState(true);
+
+    const handleConfirmPasswordChange = (e) => {
+        setConfirmPassword(e.target.value);
+    };
 
     const signIn = (e) => {
         e.preventDefault();
-        if (username === '' || password === '') {
-            alert('Please enter both username and password.');
+        if (username === '' || password === '' || email === '') {
+            alert('Please enter username, password and email.');
             return;
         }
-
+        if (password === confirmPassword) {
+            // Passwords match, do something like submit the form
+            alert('Passwords match!');
+          } else {
+            // Passwords don't match, show an error
+            alert('Passwords do not match!');
+            setPasswordMatch(false);
+          }
         // Here you can add your logic for authenticating the user
         // For this example, we'll just show an alert with the entered username
         alert('Welcome, ' + username + '!');
@@ -26,13 +40,19 @@ const SignUpPage = () => {
                 <h3>Please enter your email, username and password</h3>
                 <form onSubmit={signIn}><br />
 
+                    <label htmlFor="email">Email:</label><br />
+                    <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} /><br /><br />
+
                     <label htmlFor="username">Username:</label><br />
                     <input type="text" id="username" name="username" value={username} onChange={(e) => setUsername(e.target.value)} /><br /><br />
 
                     <label htmlFor="password">Password:</label><br />
                     <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} /><br /><br />
 
-                    <Button width = '150px' height = '75px' type="submit" value="Sign In">Sign in</Button>
+                    <label htmlFor="password">Confirm password:</label><br />
+                    <input type="password" value={confirmPassword} onChange={handleConfirmPasswordChange} style={{ borderColor: passwordMatch ? '' : 'red' }} /> <br /><br />
+
+                    <Button width = '150px' height = '75px' type="submit" value="Sign In">Sign up</Button>
                 </form><br /><br /><br />
             </div>
         </div>

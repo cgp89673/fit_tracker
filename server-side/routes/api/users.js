@@ -45,11 +45,12 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).send({ msg: "Incorrect password" });
+      return res.status(400).send({ msg: "incorrect password"});
     }
 
-    const token = jwt.sign({ id: user._id }, "passwordKey");
-    res.json({ token, user: { id: user._id, username: user.username } });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    console.log('Token to be sent: ', token); 
+    
   } catch (err) {
     console.log(`Backend failed in login: ${err}`);
     res.status(500).json({ error: err.message });

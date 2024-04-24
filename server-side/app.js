@@ -5,12 +5,13 @@ const port = process.env.PORT || 8085;
 const mongoose = require('mongoose');
 const cors = require('cors');
 const userRoutes = require('./routes/api/users');
+const workoutRoutes = require('./routes/api/workout');
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json()); 
 app.get('/', (req, res) => res.send('Hello world!'));
 app.use('/api/users', userRoutes);
-
+app.use('/api/workout', workoutRoutes);
 const conn_str = process.env.MONGODB_URI;
 
 mongoose.set('strictQuery', false);

@@ -6,12 +6,6 @@ import UserContext from '../context/UserContext';
 import Button from './Button';
 import { Link } from 'react-router-dom';
 
-
-
-
-
-
-
 const SignInPage = () => {
     const [formData, setFormData] = useState({
         username: '',
@@ -36,13 +30,17 @@ const SignInPage = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8085/api/users/login', formData);
+            const response = await axios.post('http://localhost:8085/api/users/login', {
+                username: formData.username,
+                password: formData.password,
+            });
             setUserData({
                 token: response.data.token,
                 user: response.data.user
             });
             localStorage.setItem('auth-token', response.data.token);
-            navigate('/'); // Redirect to home page after login
+            console.log("added");
+            navigate('/add-workout'); // Redirect to add workout
         } catch (error) {
             if (error.response) {
                 setErrorMessage(error.response.data.msg);

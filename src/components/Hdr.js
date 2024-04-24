@@ -17,10 +17,20 @@
 
 //export default Hdr;
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Hdr.css'; // Assuming this file is already linked correctly
 
 const Hdr = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear user token and profile data from localStorage
+    localStorage.removeItem('auth-token');
+    // Possibly other cleanup tasks here
+    // Redirect to login page
+    navigate('/login');
+  };
+
   return (
     <header className="hdr">
       <Link to="/" className="hdr-logo">
@@ -29,7 +39,8 @@ const Hdr = () => {
       <nav className="hdr-nav">
         <Link to="/add-workout" className="hdr-link">Add a Workout</Link>
         <Link to="/workout-history" className="hdr-link">Workout History</Link>
-        <Link to="/" >Logout</Link>
+        {/* Attach the logout handler to the onClick event of your logout Link */}
+        <button onClick={handleLogout} className="hdr-link">Logout</button>
       </nav>
     </header>
   );

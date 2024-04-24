@@ -7,18 +7,15 @@ const router = express.Router();
 // Signup Route
 router.post('/signup', async (req, res) => {
   try {
-    const { email, username, password, confirmPassword } = req.body;
+    const { email, username, password } = req.body; // Removed confirmPassword from destructuring
     
     if (password.length < 6) {
       return res.status(400).json({ msg: "Password should be at least 6 characters" });
     }
-
-    if (confirmPassword !== password) {
-      return res.status(400).json({ msg: "Both passwords do not match" });
-    }
+    
+    // confirmPassword check removed
 
     const existingUser = await User.findOne({ email });
-
     if (existingUser) {
       return res.status(400).json({ msg: "User with the same email already exists" });
     }
@@ -34,6 +31,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
+
 // Login Route
 router.post('/login', async (req, res) => {
   try {
@@ -45,13 +43,14 @@ router.post('/login', async (req, res) => {
       return res.status(400).send({ msg: "User with that username does not exist" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await user.comparePassword(password);
+
 
     if (!isMatch) {
       return res.status(400).send({ msg: "Incorrect password" });
     }
 
-    const token = jwt.sign({ id: user._id }, "passwordKey");
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     res.json({ token, user: { id: user._id, username: user.username } });
   } catch (err) {
     console.log(`Backend failed in login: ${err}`);
@@ -66,7 +65,7 @@ router.post('/tokenIsValid', async (req, res) => {
 
     if (!token) return res.json(false);
 
-    const verified = jwt.verify(token, "passwordKey");
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
     if (!verified) return res.json(false);
 
     const user = await User.findById(verified.id);

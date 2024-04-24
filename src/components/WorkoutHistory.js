@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import './WorkoutHistory.css';
@@ -6,14 +6,46 @@ import Button from './Button';
 import Hdr from './Hdr';
 import DeleteButton from './DeleteButton';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
+import EditUserModal from './EditUser';
+
+
 
 const WorkoutHistory = () => {
+
   // Dummy data for the workouts
   const workouts = [
-    { date: '2024-04-03', duration: 30 },
-    { date: '2024-04-05', duration: 45 },
-    { date: '2024-04-07', duration: 60 },
+    { id: 1, date: '2024-04-03', duration: 30 },
+    { id: 2, date: '2024-04-05', duration: 45 },
+    { id: 3, date: '2024-04-07', duration: 60 },
   ];
+  
+  const [users, setUsers] = useState(workouts);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const openModal = (userId) => {
+    setIsModalOpen(true);
+    setSelectedUserId(userId);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUserId(null);
+  };
+
+  const handleSave = (editedData) => {
+    const updatedUsers = users.map((user) =>
+      user.id === editedData.id ? { ...user, ...editedData } : user
+    );
+    setUsers(updatedUsers);
+    closeModal();
+  };
+
+  const handleDelete = (userId) => {
+    const updatedUsers = users.filter((user) => user.id !== userId);
+    setUsers(updatedUsers);
+  };
 
   // Calculate total duration for the doughnut chart
   const totalDuration = workouts.reduce((acc, workout) => acc + workout.duration, 0);
@@ -92,16 +124,24 @@ const WorkoutHistory = () => {
     <div className="workout-history-container">
       <h1>Your Walk History</h1>
       <div className="workout-cards-container">
-        {workouts.map((workout, index) => (
+        <ul>
+        {users.map((user, index) => (
           <div key={index} className="workout-card">
             <div className = "content">
-              <p>Date: {workout.date}</p>
-              <p>Duration: {workout.duration} minutes</p>
-              <Button className = "btn"><Link to="/add-workout">Edit</Link></Button>
-              <DeleteButton className = "btn">Delete</DeleteButton>
+              <p>Date: {user.date}</p>
+              <p>Duration: {user.duration} minutes</p>
+              <Button className = "btn" onClick={() => openModal(user.id)}>Edit</Button>
+              <DeleteButton className = "btn"  onClick={() => handleDelete(user.id)}>Delete</DeleteButton>
             </div>
+            <EditUserModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                userData={users.find((user) => user.id === selectedUserId)}
+                onSave={handleSave}
+              />
           </div>
         ))}
+        </ul>
       </div>
       <div className="chart-container">
         {/* Doughnut chart */}

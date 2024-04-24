@@ -26,7 +26,7 @@ const Hdr = () => {
   const handleLogout = () => {
     // Clear user token and profile data from localStorage
     localStorage.removeItem('auth-token');
-    // Possibly other cleanup tasks here
+   
     // Redirect to login page
     navigate('/login');
   };

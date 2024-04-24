@@ -55,11 +55,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-//
-const logout = () => {
-  localStorage.removeItem('auth-token'); // Assuming the token is stored in localStorage
-  navigate('/login'); // Redirect to the login page
-};
+
 
 // Token Verification Route
 router.post('/tokenIsValid', async (req, res) => {

@@ -31,8 +31,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-
-// Login Route
+//login
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -43,14 +42,13 @@ router.post('/login', async (req, res) => {
       return res.status(400).send({ msg: "User with that username does not exist" });
     }
 
-    const isMatch = await user.comparePassword(password);
-
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).send({ msg: "Incorrect password" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id }, "passwordKey");
     res.json({ token, user: { id: user._id, username: user.username } });
   } catch (err) {
     console.log(`Backend failed in login: ${err}`);

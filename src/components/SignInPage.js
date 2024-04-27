@@ -6,6 +6,12 @@ import UserContext from '../context/UserContext';
 import Button from './Button';
 import { Link } from 'react-router-dom';
 
+
+
+
+
+
+
 const SignInPage = () => {
     const [formData, setFormData] = useState({
         username: '',
@@ -30,17 +36,14 @@ const SignInPage = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8085/api/users/login', {
-                username: formData.username,
-                password: formData.password,
-            });
+            //const response = await axios.post('/api/users/login', formData);
+            const response = await axios.post('http://localhost:8085/api/users/login', formData);
             setUserData({
                 token: response.data.token,
                 user: response.data.user
             });
             localStorage.setItem('auth-token', response.data.token);
-            console.log("added");
-            navigate('/add-workout'); // Redirect to add workout
+            navigate('/add-workout'); // Redirect to home page after login
         } catch (error) {
             if (error.response) {
                 setErrorMessage(error.response.data.msg);
@@ -49,6 +52,7 @@ const SignInPage = () => {
             }
         }
     };
+
     return (
         <div className="sign-in-page">
             <img className="image" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fdiscoverycollege.co.uk%2Fwp-content%2Fuploads%2F2018%2F08%2Fsport_btec_discovery6.jpg&f=1&nofb=1" alt="Person running" />

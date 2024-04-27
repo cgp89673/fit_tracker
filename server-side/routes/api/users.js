@@ -50,6 +50,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     console.log('Token to be sent: ', token); 
+    res.json({ token, user: { id: user._id, username: user.username } });
     
   } catch (err) {
     console.log(`Backend failed in login: ${err}`);

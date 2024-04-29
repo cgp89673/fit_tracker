@@ -1,12 +1,12 @@
 import React from "react";
-import Hdr from "./components/Hdr";
+import UnauthHdr from "./components/UnauthHdr";
 import SignUpPage from "./components/SignUpPage";
 import Footer from "./components/Footer";
 
 function SignUp() {
   return (
     <div>
-      <Hdr />
+      <UnauthHdr />
       <SignUpPage />
       <Footer />
     </div>

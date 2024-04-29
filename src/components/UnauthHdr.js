@@ -3,25 +3,11 @@
 //import Button from './Button';
 //import { Link } from 'react-router-dom';
 
-//const Hdr = () => {
-  
-  //return (
-    //<div className="hdr">
-      //<h1><i>Dawg</i>Walk</h1>
-      //<ul>
-        //<h2><Link to="/about">Add a Run!</Link></h2>
-      //</ul>
-   // </div>
-  //);
-//};
-
-//export default Hdr;
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Hdr.css'; // Assuming this file is already linked correctly
-import Button from './Button';
 
-const Hdr = () => {
+const UnauthHdr = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -37,14 +23,8 @@ const Hdr = () => {
       <Link to="/" className="hdr-logo">
         <h1><i>Dawg</i>Walk</h1>
       </Link>
-      <nav className="hdr-nav">
-        <Link to="/add-workout" className="hdr-link">Add a Workout</Link>
-        <Link to="/workout-history" className="hdr-link">Workout History</Link>
-        {/* Attach the logout handler to the onClick event of your logout Link */}
-        <Button onClick={handleLogout} className="hdr-link">Logout</Button>
-      </nav>
     </header>
   );
 };
 
-export default Hdr;
+export default UnauthHdr;

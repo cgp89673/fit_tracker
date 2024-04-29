@@ -3,6 +3,7 @@ import Hdr from "./components/Hdr";
 import HomeContent from "./components/HomeContent";
 import Footer from "./components/Footer";
 import UserList from "./components/UsersList";
+import UnauthHdr from "./components/UnauthHdr";
 
 function HomePage() {
   const DUMMY_ENTRIES = [
@@ -23,9 +24,11 @@ function HomePage() {
     }
     
   ];
+  const token = localStorage.getItem('auth-token');
   return (
     <div className='page'>
-        <Hdr />
+        {token && <Hdr />}
+        {!token && <UnauthHdr/>}
         <HomeContent />
         <UserList items = {DUMMY_ENTRIES} />
         <Footer />

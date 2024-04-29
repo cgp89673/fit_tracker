@@ -6,7 +6,6 @@ import './WorkoutHistory.css';
 import Button from './Button';
 import Hdr from './Hdr';
 import DeleteButton from './DeleteButton';
-import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import EditUserModal from './EditUser';
 
@@ -43,44 +42,65 @@ useEffect(() => {
   ];
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
 
-  const openModal = (userId) => {
-    setIsModalOpen(true);
-    setSelectedUserId(userId);
-  };
+  useEffect(() => {
+    fetchWorkouts();
+  }, []);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedUserId(null);
+  const fetchWorkouts = async () => {
+    const token = localStorage.getItem('auth-token');
+    try {
+      const response = await axios.get('http://localhost:8085/api/workout/', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setWorkouts(response.data);
+    } catch (error) {
+      console.error('Failed to fetch workouts:', error);
+    }
   };
 
   const handleSave = async (editedData) => {
+    const token = localStorage.getItem('auth-token');
     try {
-      // Update the local state optimistically
-      const updatedWorkouts = workouts.map(workout =>
-        workout._id === editedData._id ? editedData : workout
-      );
-      setWorkouts(updatedWorkouts);
-      
-      // Make a PUT request to update the workout
-      const response = await axios.put(`/api/workout/update/${editedData._id}`, editedData, config);
-  
+      const response = await axios.put(`http://localhost:8085/api/workout/update/${editedData._id}`, editedData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setWorkouts(workouts.map(workout => workout._id === editedData._id ? response.data : workout));
       closeModal();
     } catch (error) {
-      console.error('Error updating workout:', error);
-      // Handle error, show message, etc.
+      console.error('Failed to update workout:', error);
     }
   };
 
   const handleDelete = async (workoutId) => {
+    const token = localStorage.getItem('auth-token');
     try {
-      await axios.delete(`http://localhost:8085/api/workout/${workoutId}`, config);
-      setWorkouts((prevWorkouts) => prevWorkouts.filter((workout) => workout._id !== workoutId));
+      await axios.delete(`http://localhost:8085/api/workout/${workoutId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setWorkouts(workouts.filter(workout => workout._id !== workoutId));
     } catch (error) {
-      console.error("Error deleting workout: ", JSON.stringify(error));
+      console.error('Failed to delete workout:', error);
     }
   };
+
+  const openModal = (workoutId) => {
+    setIsModalOpen(true);
+    setSelectedWorkoutId(workoutId);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedWorkoutId(null);
+  };
+
 
   // Calculate total duration for the doughnut chart
   
@@ -89,10 +109,9 @@ useEffect(() => {
   const totalGoal = numberOfWorkouts * 60;//
   const percentageGoalMet = Math.min((totalDuration / totalGoal) * 100, 100).toFixed(2);
 
-  // Chart data for doughnut chart
   const doughnutChartData = {
     datasets: [{
-      data: [totalDuration, 150 - totalDuration],
+      data: [totalDuration, goal - totalDuration],
       backgroundColor: ['#4CAF50', '#FF6384'],
       hoverOffset: 4,
       borderRadius: 20,
@@ -101,17 +120,12 @@ useEffect(() => {
     labels: ['Minutes Done', 'Minutes Left'],
   };
 
-  // Chart options for doughnut chart
   const doughnutChartOptions = {
     plugins: {
-      tooltip: {
-        enabled: true,
-      },
-      legend: {
-        display: false,
-      }
+      tooltip: { enabled: true },
+      legend: { display: false }
     },
-    cutout: '60%', // Adjusted size for the doughnut chart
+    cutout: '60%',
     circumference: 180,
     rotation: 270,
   };
@@ -120,7 +134,7 @@ useEffect(() => {
   // const labels = ['2024-04-01', '2024-04-02', '2024-04-03', '2024-04-04']; // Sample labels
   const labels = workouts.slice(0, 7).map((workout) => workout.date.split('T')[0].toString());
   const barChartData = {
-    labels: labels,
+    labels: workouts.map(workout => new Date(workout.date).toLocaleDateString()),
     datasets: [{
       label: 'Exercise Duration (minutes)',
       data: workouts.slice(0, 7).map((workout) => workout.duration), // Sample data, adjust as needed
@@ -146,15 +160,8 @@ useEffect(() => {
     }]
   };
 
-  // Chart options for bar chart
   const barChartOptions = {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-   
-    
+    scales: { y: { beginAtZero: true } }
   };
 
   return (

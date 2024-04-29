@@ -57,13 +57,15 @@ useEffect(() => {
 
   const handleSave = async (editedData) => {
     try {
+      // Update the local state optimistically
+      const updatedWorkouts = workouts.map(workout =>
+        workout._id === editedData._id ? editedData : workout
+      );
+      setWorkouts(updatedWorkouts);
+      
       // Make a PUT request to update the workout
       const response = await axios.put(`/api/workout/update/${editedData._id}`, editedData, config);
   
-      // Update the local state optimistically
-      const updatedWorkouts = workouts.map(workout => workout._id === editedData._id ? response.data : workout);
-      setWorkouts(updatedWorkouts);
-      
       closeModal();
     } catch (error) {
       console.error('Error updating workout:', error);
@@ -81,8 +83,11 @@ useEffect(() => {
   };
 
   // Calculate total duration for the doughnut chart
+  
   const totalDuration = workouts.reduce((acc, workout) => acc + workout.duration, 0);
-  const percentageGoalMet = Math.min((totalDuration / 150) * 100, 100).toFixed(2);
+  const numberOfWorkouts = workouts.length;//
+  const totalGoal = numberOfWorkouts * 60;//
+  const percentageGoalMet = Math.min((totalDuration / totalGoal) * 100, 100).toFixed(2);
 
   // Chart data for doughnut chart
   const doughnutChartData = {
@@ -112,12 +117,13 @@ useEffect(() => {
   };
 
   // Bar chart data and options
-  const labels = ['2024-04-01', '2024-04-02', '2024-04-03']; // Sample labels
+  // const labels = ['2024-04-01', '2024-04-02', '2024-04-03', '2024-04-04']; // Sample labels
+  const labels = workouts.slice(0, 7).map((workout) => workout.date.split('T')[0].toString());
   const barChartData = {
     labels: labels,
     datasets: [{
       label: 'Exercise Duration (minutes)',
-      data: [30, 45, 60, 0, 0, 0, 0], // Sample data, adjust as needed
+      data: workouts.slice(0, 7).map((workout) => workout.duration), // Sample data, adjust as needed
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(255, 159, 64, 0.2)',
@@ -180,6 +186,7 @@ useEffect(() => {
         {/* Doughnut chart */}
         <div className="workout-header">
         <h1>Goal Progress</h1>
+        <h3>With a walkday goal(aim) of 60 minutes per day</h3>
         </div>
         <Doughnut data={doughnutChartData} options={doughnutChartOptions} style={{ margin: '0' }}/>
         {/* Bar chart */}

@@ -14,7 +14,7 @@ router.post('/add', auth, async (req, res) => {
     // Create a date object from the received string
     const dateObject = new Date(date);
     // Add one day to compensate for the timezone offset issue
-    dateObject.setDate(dateObject.getDate() + 1);
+    dateObject.setDate(dateObject.getDate() + 0);
 
     const newWorkout = new Workout({
       user: req.user, 
@@ -51,7 +51,7 @@ router.put('/update/:id', auth, async (req, res) => {
     // Create a new date object from the received date
     const newDate = new Date(date);
     // Add one day to the date
-    newDate.setDate(newDate.getDate() + 1);
+    newDate.setDate(newDate.getDate() + 0);
 
     workout.duration = duration;
     workout.date = newDate; // Update with the adjusted date

@@ -111,7 +111,7 @@ useEffect(() => {
 
   const doughnutChartData = {
     datasets: [{
-      data: [totalDuration, goal - totalDuration],
+      data: [totalDuration, totalGoal - totalDuration],
       backgroundColor: ['#4CAF50', '#FF6384'],
       hoverOffset: 4,
       borderRadius: 20,
@@ -182,7 +182,7 @@ useEffect(() => {
             <EditUserModal
                 isOpen={isModalOpen}
                 onClose={closeModal}
-                userData={workouts.find((workout) => workout._id === selectedUserId)}
+                userData={workouts.find((workout) => workout._id === selectedWorkoutId)}
                 onSave={handleSave}
               />
           </div>

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Doughnut, Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import './WorkoutHistory.css';
@@ -11,16 +12,36 @@ import EditUserModal from './EditUser';
 
 
 
-const WorkoutHistory = () => {
+const WorkoutHistory = ({workouts, setWorkouts}) => {
+
+const token = localStorage.getItem('auth-token');
+const config = {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+};
+
+useEffect(() => {
+  // Code to run when the component mounts
+  const fetchWorkouts = async () => {
+    try {
+        const response = await axios.get('http://localhost:8085/api/workout/', config);
+        setWorkouts(response.data);
+    } catch (error) {
+        console.error('Error fetching workouts:', error);
+    }
+  };
+
+  fetchWorkouts();
+}, []);
 
   // Dummy data for the workouts
-  const workouts = [
+  const dummyWorkouts = [
     { id: 1, date: '2024-04-03', duration: 30 },
     { id: 2, date: '2024-04-05', duration: 45 },
     { id: 3, date: '2024-04-07', duration: 60 },
   ];
   
-  const [users, setUsers] = useState(workouts);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
 
@@ -34,17 +55,29 @@ const WorkoutHistory = () => {
     setSelectedUserId(null);
   };
 
-  const handleSave = (editedData) => {
-    const updatedUsers = users.map((user) =>
-      user.id === editedData.id ? { ...user, ...editedData } : user
-    );
-    setUsers(updatedUsers);
-    closeModal();
+  const handleSave = async (editedData) => {
+    try {
+      // Make a PUT request to update the workout
+      const response = await axios.put(`/api/workout/update/${editedData._id}`, editedData, config);
+  
+      // Update the local state optimistically
+      const updatedWorkouts = workouts.map(workout => workout._id === editedData._id ? response.data : workout);
+      setWorkouts(updatedWorkouts);
+      
+      closeModal();
+    } catch (error) {
+      console.error('Error updating workout:', error);
+      // Handle error, show message, etc.
+    }
   };
 
-  const handleDelete = (userId) => {
-    const updatedUsers = users.filter((user) => user.id !== userId);
-    setUsers(updatedUsers);
+  const handleDelete = async (workoutId) => {
+    try {
+      await axios.delete(`http://localhost:8085/api/workout/${workoutId}`, config);
+      setWorkouts((prevWorkouts) => prevWorkouts.filter((workout) => workout._id !== workoutId));
+    } catch (error) {
+      console.error("Error deleting workout: ", JSON.stringify(error));
+    }
   };
 
   // Calculate total duration for the doughnut chart
@@ -125,18 +158,18 @@ const WorkoutHistory = () => {
       <h1>Your Walk History</h1>
       <div className="workout-cards-container">
         <ul>
-        {users.map((user, index) => (
+        {workouts.map((workout, index) => (
           <div key={index} className="workout-card">
             <div className = "content">
-              <p>Date: {user.date}</p>
-              <p>Duration: {user.duration} minutes</p>
-              <Button className = "btn" onClick={() => openModal(user.id)}>Edit</Button>
-              <DeleteButton className = "btn"  onClick={() => handleDelete(user.id)}>Delete</DeleteButton>
+              <p>Date: {workout.date.split('T')[0]}</p>
+              <p>Duration: {workout.duration} minutes</p>
+              <Button className = "btn" onClick={() => openModal(workout._id)}>Edit</Button>
+              <DeleteButton className = "btn"  onClick={() => handleDelete(workout._id)}>Delete</DeleteButton>
             </div>
             <EditUserModal
                 isOpen={isModalOpen}
                 onClose={closeModal}
-                userData={users.find((user) => user.id === selectedUserId)}
+                userData={workouts.find((workout) => workout._id === selectedUserId)}
                 onSave={handleSave}
               />
           </div>

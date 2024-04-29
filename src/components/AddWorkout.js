@@ -5,7 +5,7 @@ import Hdr from './Hdr';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/UserContext'; 
 
-const AddWorkout = () => {
+const AddWorkout = ({addWorkout}) => {
     const [formData, setFormData] = useState({
         duration: '',
         date: ''
@@ -27,6 +27,7 @@ const AddWorkout = () => {
             return;
         }
 
+
         try {
             const response = await axios.post('http://localhost:8085/api/workout/add', {
                 duration: parseInt(formData.duration, 10),
@@ -37,8 +38,7 @@ const AddWorkout = () => {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
-            console.log(response.data); 
+            addWorkout(response.data);
             setFormData({ duration: '', date: '' });
             navigate('/workout-history'); 
         } catch (error) {
@@ -60,7 +60,8 @@ const AddWorkout = () => {
                     onChange={handleChange}
                     required
                 />
-                
+
+
                 <label htmlFor="date">Date:</label>
                 <input
                     type="date"

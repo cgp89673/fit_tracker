@@ -6,12 +6,6 @@ import UserContext from '../context/UserContext';
 import Button from './Button';
 import { Link } from 'react-router-dom';
 
-
-
-
-
-
-
 const SignInPage = () => {
     const [formData, setFormData] = useState({
         username: '',

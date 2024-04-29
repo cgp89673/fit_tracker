@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Workout = require('../../models/Workout');
+
 const User = require('../../models/User');
 const auth = require('../../middleware/auth'); 
 
@@ -34,7 +35,6 @@ router.post('/add', auth, async (req, res) => {
 
   
 // Update a workout
-
 router.put('/update/:id', auth, async (req, res) => {
   try {
     const { duration, date } = req.body;
@@ -65,8 +65,6 @@ router.put('/update/:id', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
-
-  
 
 // DELETE api/workouts/:id
 router.delete('/:id', auth, async (req, res) => {
